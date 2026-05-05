@@ -1,10 +1,11 @@
   <header>
     <h1>
-      {{ title | default: "Nerdy pizza's" }} <small>{{ meta.filter_count }} / {{ meta.total_count }}</small>
+{{ title | default: "Nerdy pizza's" }} {% if meta %}<small>{{ meta.filter_count }} / {{ meta.total_count }} {% endif %}</small>
     </h1>
 
     <p>
-      {%- if selectedType != "" -%}
+
+      {%- if selectedType and selectedType != "" -%}
         {%- case selectedType -%}
           {%- when "vegetarisch" -%}
             {%- assign icon = "soort: 🥦" -%}
@@ -18,7 +19,7 @@
         <span>{{ icon }}</span>
       {%- endif -%}
 
-      {%- if selectedSort != "" -%}
+      {%- if selectedSort and selectedSort != "" -%}
         {%- case selectedSort -%}
           {%- when "low-high" -%}
             {%- assign sortLabel = "prijs: 💰 → 💰💰" -%}

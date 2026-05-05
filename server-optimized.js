@@ -27,20 +27,28 @@ app.get('/pizzas', async function (request, response) {
   params.set('meta', 'total_count,filter_count')
 
   const type = request.query.type
+  const price = request.query.price
+  const enhanced = request.query.enhanced
 
   if (type) {
     params.set('filter[type][_eq]', type)
   }
 
-   // const { type = '', price = '' } = request.query
-
   const pizzasResponse = await fetch(`${baseURL}?${params.toString()}`)
-  const pizzas = await pizzasResponse.json()
+  const pizzasJSON = await pizzasResponse.json()
 
-  // const { type = '', price = '' } = request.query // use object destructuring
-  // type && params.set('filter[type][_eq]', type) // use short circuiting
-  
-  response.render('pizzas.liquid', {pizzas: pizzas.data, meta: pizzas.meta, selectedType: type || ''})
+  const pizzas = {
+    pizzas: pizzasJSON.data,
+    selectedType: type,
+    selectedSort: price,
+    meta: pizzasJSON.meta
+  }
+
+  if (enhanced) {
+    response.render('partials/pizza_list.liquid', pizzas)
+  } else {
+    response.render('pizzas.liquid', pizzas)
+  }
 })
 
 app.get('/pizzas/:slug', async function (request, response) {
@@ -54,6 +62,8 @@ app.get('/pizzas/:slug', async function (request, response) {
 })
 
 app.set('port', process.env.PORT || 8001)
+
 app.listen(app.get('port'), function () {
   console.log(`Application started on http://localhost:${app.get('port')}`)
 })
+

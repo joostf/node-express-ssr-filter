@@ -48,10 +48,7 @@ app.get('/pizzas', async function (request, response) {
   const pizzasResponse = await fetch(url)
   const pizzasJSON = await pizzasResponse.json()
 
-  // Mimic network delay for demonstration purposes
-  // await new Promise(resolve => setTimeout(resolve, 5000))
-
-  const templateData = {
+  const pizzas = {
     pizzas: pizzasJSON.data,
     selectedType: type,
     selectedSort: price,
@@ -59,9 +56,9 @@ app.get('/pizzas', async function (request, response) {
   }
 
   if (enhanced) {
-    response.render('partials/pizza_list.liquid', templateData)
+    response.render('partials/pizza_list.liquid', pizzas)
   } else {
-    response.render('pizzas.liquid', templateData)
+    response.render('pizzas.liquid', pizzas)
   }
 })
 
