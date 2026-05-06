@@ -26,11 +26,7 @@ app.get('/', async function (request, response) {
 app.get('/pizzas', async function (request, response) {
   const params = new URLSearchParams()
 
-  const type = request.query.type || ''
-  const price = request.query.price || ''
-  const enhanced = request.query.enhanced || ''
-
-  if (price === 'low-high') {
+  if (request.query.price === 'low-high') {
     params.set('sort', 'price')
   } else if (price === 'high-low') {
     params.set('sort', '-price') 
@@ -38,8 +34,8 @@ app.get('/pizzas', async function (request, response) {
     params.set('sort', 'name') 
   }
 
-  if (type) {
-    params.set('filter[type][_eq]', type)
+  if (request.query.type) {
+    params.set('filter[type][_eq]', request.query.type)
   }
     
   params.set('meta', 'total_count,filter_count')
@@ -48,17 +44,10 @@ app.get('/pizzas', async function (request, response) {
   const pizzasResponse = await fetch(url)
   const pizzasJSON = await pizzasResponse.json()
 
-  const pizzas = {
-    pizzas: pizzasJSON.data,
-    selectedType: type,
-    selectedSort: price,
-    meta: pizzasJSON.meta
-  }
-
-  if (enhanced) {
-    response.render('partials/pizza_list.liquid', pizzas)
+  if (request.query.enhanced) {
+    response.render('partials/pizza_list.liquid', { pizzas: pizzasJSON.data, selectedType: request.query.type, selectedSort: request.query.type, meta: pizzasJSON.meta})
   } else {
-    response.render('pizzas.liquid', pizzas)
+    response.render('pizzas.liquid', , { pizzas: pizzasJSON.data, selectedType: request.query.type, selectedSort: request.query.type, meta: pizzasJSON.meta})
   }
 })
 
