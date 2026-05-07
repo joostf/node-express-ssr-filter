@@ -8,7 +8,7 @@ router.get('/', async (request, response) => {
   params.set('limit', 4)
   params.set('sort', '-ordered')
 
-  const data = await fetchData('demo_pizzas', params)
+  const pizzas = await fetchData('demo_pizzas', params)
 
   response.render('index.liquid', {
     pizzas: data?.data || []
